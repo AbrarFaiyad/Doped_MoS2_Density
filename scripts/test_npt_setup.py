@@ -26,21 +26,27 @@ def test_imports():
         return False
 
 def test_surface_builder():
-    """Test surface builder import."""
-    print("\nTesting surface builder import...")
+    """Test internal MoS2 structure building function."""
+    print("\nTesting internal MoS2 structure builder...")
     try:
-        sys.path.append('/home/afaiyad/borgstore/Energy_Profile_ML_Pot_vs_DFT/energy_profile_calculator')
-        from energy_profile_calculator.surfaces import SurfaceBuilder
-        print("✓ Surface builder import successful")
+        import os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+        from mos2_npt_simulation import build_mos2_structure
+        
+        # Test with small parameters
+        atoms = build_mos2_structure(supercell_size=(2, 2), layers=2)
+        print(f"✓ Built test structure with {len(atoms)} atoms")
         return True
-    except ImportError as e:
-        print(f"✗ Surface builder import error: {e}")
+    except Exception as e:
+        print(f"✗ MoS2 structure builder error: {e}")
         return False
 
 def test_simulation_class():
     """Test MoS2NPTSimulation class initialization."""
     print("\nTesting simulation class...")
     try:
+        import os
+        sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
         from mos2_npt_simulation import MoS2NPTSimulation
         
         # Test with small parameters for quick testing

@@ -1,0 +1,86 @@
+Activating conda environment: fair
+========================================
+MoS2 NPT Simulation Runner
+========================================
+Starting MoS2 NPT simulation...
+Simulation started at: Mon Jul 14 17:59:38 PDT 2025
+/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/torchtnt/utils/version.py:12: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  import pkg_resources
+============================================================
+MoS2 NPT SIMULATION
+============================================================
+Initializing MoS2 NPT simulation:
+  - Layers: 8
+  - Supercell size: 10x10
+  - Temperature: 300 K
+  - Pressure: 1.0 atm (101325 Pa)
+  - Timestep: 1.0 fs
+
+==================================================
+SETTING UP FAIRCHEM CALCULATOR
+==================================================
+Loading UMA-S-1.1 model...
+Error initializing calculator: 401 Client Error. (Request ID: Root=1-6875a802-566cc20e53187d40035233dc;eafabba8-902e-473c-93d8-3aa770d1b9a9)
+
+Cannot access gated repo for url https://huggingface.co/facebook/UMA/resolve/main/checkpoints/uma-s-1p1.pt.
+Access to model facebook/UMA is restricted. You must have access to it and be authenticated to access it. Please log in.
+
+Simulation failed with error: 401 Client Error. (Request ID: Root=1-6875a802-566cc20e53187d40035233dc;eafabba8-902e-473c-93d8-3aa770d1b9a9)
+
+Cannot access gated repo for url https://huggingface.co/facebook/UMA/resolve/main/checkpoints/uma-s-1p1.pt.
+Access to model facebook/UMA is restricted. You must have access to it and be authenticated to access it. Please log in.
+Traceback (most recent call last):
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 409, in hf_raise_for_status
+    response.raise_for_status()
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: https://huggingface.co/facebook/UMA/resolve/main/checkpoints/uma-s-1p1.pt
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/borgstore/amartini/afaiyad/Doped_MoS2_density/results/mos2_npt_simulation.py", line 358, in <module>
+    main()
+  File "/mnt/borgstore/amartini/afaiyad/Doped_MoS2_density/results/mos2_npt_simulation.py", line 329, in main
+    sim.setup_calculator()
+  File "/mnt/borgstore/amartini/afaiyad/Doped_MoS2_density/results/mos2_npt_simulation.py", line 72, in setup_calculator
+    predictor = pretrained_mlip.get_predict_unit(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/fairchem/core/calculate/pretrained_mlip.py", line 103, in get_predict_unit
+    checkpoint_path = hf_hub_download(
+                      ^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1008, in hf_hub_download
+    return _hf_hub_download_to_cache_dir(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1115, in _hf_hub_download_to_cache_dir
+    _raise_on_head_call_error(head_call_error, force_download, local_files_only)
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1645, in _raise_on_head_call_error
+    raise head_call_error
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1533, in _get_metadata_or_catch_error
+    metadata = get_hf_file_metadata(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/utils/_validators.py", line 114, in _inner_fn
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 1450, in get_hf_file_metadata
+    r = _request_wrapper(
+        ^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 286, in _request_wrapper
+    response = _request_wrapper(
+               ^^^^^^^^^^^^^^^^^
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/file_download.py", line 310, in _request_wrapper
+    hf_raise_for_status(response)
+  File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/huggingface_hub/utils/_http.py", line 426, in hf_raise_for_status
+    raise _format(GatedRepoError, message, response) from e
+huggingface_hub.errors.GatedRepoError: 401 Client Error. (Request ID: Root=1-6875a802-566cc20e53187d40035233dc;eafabba8-902e-473c-93d8-3aa770d1b9a9)
+
+Cannot access gated repo for url https://huggingface.co/facebook/UMA/resolve/main/checkpoints/uma-s-1p1.pt.
+Access to model facebook/UMA is restricted. You must have access to it and be authenticated to access it. Please log in.
+Simulation completed successfully at: Mon Jul 14 17:59:46 PDT 2025
+Results saved in: /home/afaiyad/borgstore/Doped_MoS2_density/results
+========================================
+Simulation Complete
+========================================
