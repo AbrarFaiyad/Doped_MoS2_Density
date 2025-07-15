@@ -219,16 +219,30 @@ class MoS2NPTSimulation:
             # Using the conversion: 1 Pa = 6.242e-12 eV/Å³
             pressure_au = self.pressure * 6.242e-12  # Convert Pa to eV/Å³
             
-            # Compressibility for MoS2 (approximate value in atomic units)
-            # Using a typical value for layered materials: ~4.57e-5 bar^-1
-            # 1 bar = 1e5 Pa, so convert properly
-            compressibility_bar = 4.57e-5  # bar^-1
-            compressibility_au = compressibility_bar / 1e5 / 6.242e-12  # Convert to Å³/eV
+            # Compressibility for MoS2 (realistic value in atomic units)
+            # Literature value for MoS2: ~1-5 × 10^-5 bar^-1
+            # Conversion: 1 bar^-1 = 1.602e-6 Å³/eV
+            compressibility_bar = 2.0e-5  # bar^-1 (conservative estimate for MoS2)
+            compressibility_au = compressibility_bar * 1.602e-6  # Convert to Å³/eV
+            
+            # Additional safety checks for stability
+            if compressibility_au > 1e-4:
+                print(f"Warning: Compressibility {compressibility_au:.2e} may be too high for stability")
+                compressibility_au = 1e-4  # Cap at safe value
             
             print(f"Pressure conversion:")
             print(f"  - Pressure in Pa: {self.pressure:.0f}")
             print(f"  - Pressure in atomic units: {pressure_au:.2e} eV/Å³")
-            print(f"  - Compressibility: {compressibility_au:.2e} Å³/eV")
+            print(f"  - Compressibility (bar^-1): {compressibility_bar:.2e}")
+            print(f"  - Compressibility (Å³/eV): {compressibility_au:.2e}")
+            
+            # Use more conservative NPT parameters for stability
+            temperature_coupling = 500 * units.fs  # Longer coupling time
+            pressure_coupling = 2000 * units.fs    # Longer coupling time
+            
+            print(f"NPT coupling parameters:")
+            print(f"  - Temperature coupling: {temperature_coupling/units.fs:.0f} fs")
+            print(f"  - Pressure coupling: {pressure_coupling/units.fs:.0f} fs")
             
             # Initialize NPTBerendsen dynamics
             dyn = NPTBerendsen(
@@ -236,8 +250,8 @@ class MoS2NPTSimulation:
                 timestep=self.timestep * units.fs,
                 temperature_K=self.temperature,
                 pressure_au=pressure_au,
-                taut=100 * units.fs,  # Temperature coupling time (100 fs)
-                taup=1000 * units.fs,  # Pressure coupling time (1 ps)
+                taut=temperature_coupling,  # Conservative temperature coupling
+                taup=pressure_coupling,     # Conservative pressure coupling  
                 compressibility_au=compressibility_au,
                 fixcm=True
             )
@@ -257,19 +271,33 @@ class MoS2NPTSimulation:
             trajectory = Trajectory("npt_trajectory.traj", "w", self.atoms)
             dyn.attach(trajectory.write, interval=traj_interval)
             
-            # Custom function to log density
+            # Custom function to log density and check for instability
             def log_density():
                 current_density = self.calculate_density()
                 current_temp = self.estimate_temperature()
                 current_volume = self.atoms.get_volume()
                 step = dyn.nsteps
                 
+                # Check for system instability
+                positions = self.atoms.get_positions()
+                max_position = np.max(np.abs(positions))
+                cell_volume = self.atoms.get_volume()
+                
+                # Safety checks
+                if max_position > 1000:  # Positions > 1000 Å indicate instability
+                    print(f"WARNING: Large atomic displacement detected at step {step}")
+                    print(f"  Max position: {max_position:.2e} Å")
+                
+                if cell_volume > 1e6:  # Volume > 1M Å³ indicates runaway expansion
+                    print(f"WARNING: Large volume expansion at step {step}")
+                    print(f"  Volume: {cell_volume:.2e} Å³")
+                
                 with open("density_log.txt", "a") as f:
-                    f.write(f"{step:8d} {current_temp:8.2f} {current_volume:12.3f} {current_density:8.4f}\n")
+                    f.write(f"{step:8d} {current_temp:8.2f} {current_volume:12.3f} {current_density:8.4f} {max_position:12.3f}\n")
             
-            # Initialize density log file
+            # Initialize density log file with additional column
             with open("density_log.txt", "w") as f:
-                f.write("# Step    Temp(K)   Volume(Å³)   Density(g/cm³)\n")
+                f.write("# Step    Temp(K)   Volume(Å³)   Density(g/cm³)  MaxPos(Å)\n")
             
             dyn.attach(log_density, interval=log_interval)
             
@@ -359,13 +387,13 @@ def main():
     print("MoS2 NPT SIMULATION")
     print("="*60)
     
-    # Create simulation instance
+    # Create simulation instance with conservative parameters
     sim = MoS2NPTSimulation(
         layers=8,
         supercell_size=(10, 10),
         temperature=300,  # K
         pressure=1.0,     # atm
-        timestep=1.0      # fs
+        timestep=0.5      # Reduced timestep for stability
     )
     
     try:
@@ -373,10 +401,10 @@ def main():
         sim.setup_calculator()
         sim.build_structure()
         
-        # Run NPT simulation
+        # Run NPT simulation with shorter initial run for testing
         results = sim.run_npt_simulation(
-            steps=50000,      # 50 ps simulation
-            log_interval=100,
+            steps=10000,      # Reduced steps for testing stability
+            log_interval=50,  # More frequent logging
             traj_interval=100
         )
         

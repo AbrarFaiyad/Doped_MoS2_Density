@@ -1,13 +1,19 @@
+Activating conda environment: fair
+========================================
+MoS2 NPT Simulation Runner
+========================================
+Starting MoS2 NPT simulation...
+Simulation started at: Mon Jul 14 18:12:40 PDT 2025
 /home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/torchtnt/utils/version.py:12: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
   import pkg_resources
 /home/afaiyad/.local/lib/python3.11/site-packages/ase/md/nvtberendsen.py:98: RuntimeWarning: divide by zero encountered in scalar divide
   1.0 + (self.temperature / old_temperature - 1.0) * tautscl
 ERROR:root:Error edge_vec_0_distance: 5.731658925283616e-15
-ERROR:root:Error edge_vec_0_distance: 1.7053025658242404e-12
-WARNING:root:PBCv2: graph generation encountered a very large box. The size of the cell is tensor([[[ 4.3349e+12,  0.0000e+00,  0.0000e+00],
-         [-2.1674e+12,  3.7541e+12,  0.0000e+00],
-         [ 0.0000e+00,  0.0000e+00,  3.4788e+12]]], device='cuda:0',
-       grad_fn=<AddBackward0>) and min/max positions are (tensor(-1.8530e+12, device='cuda:0'), tensor(4.1181e+12, device='cuda:0')). Performance will be slower than optimal.
+ERROR:root:Error edge_vec_0_distance: 7.673861546209082e-12
+WARNING:root:PBCv2: graph generation encountered a very large box. The size of the cell is tensor([[[ 1.3099e+13,  0.0000e+00,  0.0000e+00],
+         [-6.5497e+12,  1.1344e+13,  0.0000e+00],
+         [ 0.0000e+00,  0.0000e+00,  1.0512e+13]]], device='cuda:0',
+       grad_fn=<AddBackward0>) and min/max positions are (tensor(-5.9774e+12, device='cuda:0'), tensor(1.3099e+13, device='cuda:0')). Performance will be slower than optimal.
 WARNING:root:PBCv2: Does this system require PBC=True or will PBC=False work?
 ============================================================
 MoS2 NPT SIMULATION
@@ -64,22 +70,22 @@ Pressure conversion:
   - Compressibility: 7.32e+01 Å³/eV
 
 Starting NPT simulation...
-Error during NPT simulation: No edges found in input system, this means either you have a single atom in the system or the atoms are farther apart than the radius cutoff of the model of 6 Angstroms. We don't know how to handle this case. Check the positions of system: tensor([[2.1674e+12, 3.7541e+12, 2.1744e+11],
-        [2.1674e+11, 1.2514e+11, 4.3488e+11],
-        [2.3760e+12, 4.2903e+11, 4.7962e+08],
+Error during NPT simulation: No edges found in input system, this means either you have a single atom in the system or the atoms are farther apart than the radius cutoff of the model of 6 Angstroms. We don't know how to handle this case. Check the positions of system: tensor([[ 1.3099e+13,  1.9263e+04,  6.5706e+11],
+        [ 6.5497e+11,  3.7815e+11,  1.3141e+12],
+        [-2.3049e+11,  6.1807e+12,  1.4493e+09],
         ...,
-        [1.9507e+12, 3.3787e+12, 3.2614e+12],
-        [1.6378e+12, 3.4986e+12, 3.4783e+12],
-        [2.1674e+12, 3.5038e+12, 3.0439e+12]], device='cuda:0',
+        [ 5.8947e+12,  1.0210e+13,  9.8554e+12],
+        [ 8.4317e+12,  2.2496e+12,  1.0511e+13],
+        [ 6.5497e+12,  1.0588e+13,  9.1983e+12]], device='cuda:0',
        grad_fn=<AddBackward0>)
 
-Simulation failed with error: No edges found in input system, this means either you have a single atom in the system or the atoms are farther apart than the radius cutoff of the model of 6 Angstroms. We don't know how to handle this case. Check the positions of system: tensor([[2.1674e+12, 3.7541e+12, 2.1744e+11],
-        [2.1674e+11, 1.2514e+11, 4.3488e+11],
-        [2.3760e+12, 4.2903e+11, 4.7962e+08],
+Simulation failed with error: No edges found in input system, this means either you have a single atom in the system or the atoms are farther apart than the radius cutoff of the model of 6 Angstroms. We don't know how to handle this case. Check the positions of system: tensor([[ 1.3099e+13,  1.9263e+04,  6.5706e+11],
+        [ 6.5497e+11,  3.7815e+11,  1.3141e+12],
+        [-2.3049e+11,  6.1807e+12,  1.4493e+09],
         ...,
-        [1.9507e+12, 3.3787e+12, 3.2614e+12],
-        [1.6378e+12, 3.4986e+12, 3.4783e+12],
-        [2.1674e+12, 3.5038e+12, 3.0439e+12]], device='cuda:0',
+        [ 5.8947e+12,  1.0210e+13,  9.8554e+12],
+        [ 8.4317e+12,  2.2496e+12,  1.0511e+13],
+        [ 6.5497e+12,  1.0588e+13,  9.1983e+12]], device='cuda:0',
        grad_fn=<AddBackward0>)
 Traceback (most recent call last):
   File "/mnt/borgstore/amartini/afaiyad/Doped_MoS2_density/results/mos2_npt_simulation.py", line 402, in <module>
@@ -148,11 +154,16 @@ Traceback (most recent call last):
            ^^^^^^^^^^^^^^^^^^^^^
   File "/home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/fairchem/core/models/uma/escn_md.py", line 446, in forward
     raise ValueError(
-ValueError: No edges found in input system, this means either you have a single atom in the system or the atoms are farther apart than the radius cutoff of the model of 6 Angstroms. We don't know how to handle this case. Check the positions of system: tensor([[2.1674e+12, 3.7541e+12, 2.1744e+11],
-        [2.1674e+11, 1.2514e+11, 4.3488e+11],
-        [2.3760e+12, 4.2903e+11, 4.7962e+08],
+ValueError: No edges found in input system, this means either you have a single atom in the system or the atoms are farther apart than the radius cutoff of the model of 6 Angstroms. We don't know how to handle this case. Check the positions of system: tensor([[ 1.3099e+13,  1.9263e+04,  6.5706e+11],
+        [ 6.5497e+11,  3.7815e+11,  1.3141e+12],
+        [-2.3049e+11,  6.1807e+12,  1.4493e+09],
         ...,
-        [1.9507e+12, 3.3787e+12, 3.2614e+12],
-        [1.6378e+12, 3.4986e+12, 3.4783e+12],
-        [2.1674e+12, 3.5038e+12, 3.0439e+12]], device='cuda:0',
+        [ 5.8947e+12,  1.0210e+13,  9.8554e+12],
+        [ 8.4317e+12,  2.2496e+12,  1.0511e+13],
+        [ 6.5497e+12,  1.0588e+13,  9.1983e+12]], device='cuda:0',
        grad_fn=<AddBackward0>)
+Simulation completed successfully at: Mon Jul 14 18:12:55 PDT 2025
+Results saved in: /home/afaiyad/borgstore/Doped_MoS2_density/results
+========================================
+Simulation Complete
+========================================

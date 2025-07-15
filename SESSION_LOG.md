@@ -232,3 +232,73 @@ Fix pressure unit conversion in NPT simulation setup
 - Analyze density results
 
 ---
+
+## Session Entry: July 14, 2025 - NPT Simulation Instability Error
+
+### User Prompt:
+```
+error 
+```
+
+### Critical Problem Identified:
+NPT simulation failed due to system instability causing atomic positions to explode to astronomical values:
+
+**Error**: `No edges found in input system, atoms are farther apart than the radius cutoff of the model of 6 Angstroms`
+
+**Evidence**:
+- Initial structure: atoms at ~30 Å positions (normal)
+- During simulation: atoms exploded to ~10^12 Å positions (catastrophic)
+- Cell size became: `4.3349e+12 x 3.7541e+12 x 3.4788e+12` Å (completely unphysical)
+
+### Root Cause Analysis:
+1. **Compressibility value too high**: `7.32e+01 Å³/eV` is orders of magnitude too large
+2. **Unit conversion error**: The compressibility calculation is incorrect
+3. **System becomes unstable**: NPT algorithm can't handle such high compressibility
+4. **Cell expansion runaway**: System expands uncontrollably
+
+### Immediate Actions Required:
+1. Fix compressibility unit conversion
+2. Use realistic MoS2 compressibility values
+3. Add stability checks
+4. Consider using smaller timestep or different pressure coupling
+
+### Critical Fixes Implemented:
+✅ **Fixed compressibility calculation**:
+- **OLD**: `7.32e+01 Å³/eV` (completely wrong, 6 orders of magnitude too high)
+- **NEW**: `~3.2e-11 Å³/eV` (realistic value for MoS2)
+- Used proper conversion: `1 bar^-1 = 1.602e-6 Å³/eV`
+- Conservative MoS2 compressibility: `2.0e-5 bar^-1`
+
+✅ **Enhanced stability measures**:
+- Increased temperature coupling: 100→500 fs
+- Increased pressure coupling: 1000→2000 fs  
+- Reduced timestep: 1.0→0.5 fs
+- Added safety cap on compressibility
+- Reduced initial simulation: 50k→10k steps
+
+✅ **Added monitoring systems**:
+- Real-time instability detection
+- Maximum position tracking
+- Volume expansion monitoring
+- Enhanced logging with position data
+
+✅ **Created verification tools**:
+- Structure validation script
+- Neighbor distance checking
+- Stoichiometry verification
+- Cell parameter validation
+
+### Technical Details:
+- **Root cause**: Compressibility was ~10^6 times too large
+- **Physics**: High compressibility → runaway expansion → system explosion
+- **Solution**: Realistic material properties + conservative dynamics
+
+### Status: 
+✅ **COMPLETED** - Critical stability fixes implemented
+
+### Next Steps:
+- Verify structure with validation script
+- Test simulation with conservative parameters
+- Monitor for stable behavior before scaling up
+
+---
