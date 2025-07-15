@@ -216,11 +216,19 @@ class MoS2NPTSimulation:
         
         try:
             # Convert pressure to atomic units (eV/Å³)
-            pressure_au = self.pressure * units.Pa  # Convert Pa to eV/Å³
+            # Using the conversion: 1 Pa = 6.242e-12 eV/Å³
+            pressure_au = self.pressure * 6.242e-12  # Convert Pa to eV/Å³
             
             # Compressibility for MoS2 (approximate value in atomic units)
-            # Using a typical value for layered materials
-            compressibility_au = 4.57e-5 / units.bar  # Å³/eV
+            # Using a typical value for layered materials: ~4.57e-5 bar^-1
+            # 1 bar = 1e5 Pa, so convert properly
+            compressibility_bar = 4.57e-5  # bar^-1
+            compressibility_au = compressibility_bar / 1e5 / 6.242e-12  # Convert to Å³/eV
+            
+            print(f"Pressure conversion:")
+            print(f"  - Pressure in Pa: {self.pressure:.0f}")
+            print(f"  - Pressure in atomic units: {pressure_au:.2e} eV/Å³")
+            print(f"  - Compressibility: {compressibility_au:.2e} Å³/eV")
             
             # Initialize NPTBerendsen dynamics
             dyn = NPTBerendsen(

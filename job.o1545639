@@ -1,3 +1,9 @@
+Activating conda environment: fair
+========================================
+MoS2 NPT Simulation Runner
+========================================
+Starting MoS2 NPT simulation...
+Simulation started at: Mon Jul 14 18:09:25 PDT 2025
 /home/afaiyad/.conda/envs/fair/lib/python3.11/site-packages/torchtnt/utils/version.py:12: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
   import pkg_resources
 ============================================================
@@ -62,3 +68,8 @@ Traceback (most recent call last):
     pressure_au = self.pressure * units.Pa  # Convert Pa to eV/Å³
                                   ^^^^^^^^
 AttributeError: module 'ase.units' has no attribute 'Pa'. Did you mean: 'GPa'?
+Simulation completed successfully at: Mon Jul 14 18:09:47 PDT 2025
+Results saved in: /home/afaiyad/borgstore/Doped_MoS2_density/results
+========================================
+Simulation Complete
+========================================

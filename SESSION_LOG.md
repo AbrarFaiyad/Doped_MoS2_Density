@@ -185,3 +185,50 @@ User provided ASE's built-in `mx2` function which is ideal for building MoS2 str
 - Analyze density results
 
 ---
+
+## Session Entry: July 14, 2025 - Fix Unit Conversion Error
+
+### User Prompt:
+```
+error in simulation log
+```
+
+### Problem Identified:
+Simulation failed with error: `module 'ase.units' has no attribute 'Pa'`
+
+From the log:
+```
+Error during NPT simulation: module 'ase.units' has no attribute 'Pa'
+AttributeError: module 'ase.units' has no attribute 'Pa'. Did you mean: 'GPa'?
+```
+
+### Root Cause:
+- ASE's units module doesn't have `units.Pa` 
+- Need to use correct pressure unit conversion for NPTBerendsen
+- The error suggests `units.GPa` is available
+
+### Solution:
+Fix pressure unit conversion in NPT simulation setup
+
+### Implementation:
+✅ **Fixed pressure unit conversion error**:
+- Removed dependency on non-existent `units.Pa`
+- Used direct conversion: 1 Pa = 6.242e-12 eV/Å³
+- Fixed compressibility conversion from bar^-1 to Å³/eV
+- Added debug output to show conversion values
+- Eliminated all references to unavailable ASE units
+
+### Details of Fix:
+- **Pressure conversion**: `pressure_au = self.pressure * 6.242e-12` (Pa to eV/Å³)
+- **Compressibility conversion**: Manual calculation from bar^-1 to Å³/eV
+- **Added logging**: Shows conversion values for debugging
+
+### Status: 
+✅ **COMPLETED** - Unit conversion error fixed
+
+### Next Steps:
+- Test the fixed simulation
+- Verify NPT runs successfully
+- Analyze density results
+
+---
