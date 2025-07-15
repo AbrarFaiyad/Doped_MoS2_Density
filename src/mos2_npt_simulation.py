@@ -20,7 +20,6 @@ from ase import units, Atoms
 from ase.io import read, write, Trajectory
 from ase.md.nptberendsen import NPTBerendsen
 from ase.md import MDLogger
-from ase.build import mx2
 from fairchem.core import pretrained_mlip, FAIRChemCalculator
 from fairchem.core.units.mlip_unit.api.inference import InferenceSettings
 import numpy as np
@@ -28,34 +27,36 @@ import time
 import os
 import sys
 
-def build_mos2_structure(supercell_size=(10, 10), layers=8, a=3.18, vacuum=0):
+# Import SurfaceBuilder for proper MoS2 construction
+from surfaces import SurfaceBuilder
+
+def build_mos2_structure(supercell_size=(10, 10), layers=8, vacuum=0):
     """
-    Build a layered MoS2 structure using ASE's mx2 function.
+    Build a layered MoS2 structure using the comprehensive SurfaceBuilder class.
     
     Args:
         supercell_size (tuple): Size of supercell in x and y directions
         layers (int): Number of MoS2 layers
-        a (float): In-plane lattice parameter in Angstroms
-        vacuum (float): Vacuum space above structure in Angstroms
+        vacuum (float): Vacuum space above and below structure in Angstroms
     
     Returns:
         Atoms: ASE Atoms object containing the MoS2 structure
     """
-    print(f"Building MoS2 structure using ASE's mx2 function:")
+    print(f"Building MoS2 structure using SurfaceBuilder:")
     print(f"  - Supercell: {supercell_size[0]}x{supercell_size[1]}")
     print(f"  - Layers: {layers}")
-    print(f"  - Lattice parameter a: {a:.2f} Å")
     print(f"  - Vacuum: {vacuum:.2f} Å")
     
-    # Build MoS2 structure using ASE's mx2 function
-    # The thickness parameter controls the layer separation
-    atoms = mx2(
-        formula='MoS2',
-        kind='2H',  # 2H polytype (most common)
-        a=a,
-        thickness=3.19,  # Standard MoS2 layer thickness
-        size=(supercell_size[0], supercell_size[1], layers),
-        vacuum=vacuum
+    # Initialize SurfaceBuilder
+    surface_builder = SurfaceBuilder()
+    
+    # Build MoS2 structure using the comprehensive 2D material builder
+    # This uses proper TMD lattice parameters and structure
+    atoms = surface_builder.build_2d_material(
+        material='MoS2',
+        size=supercell_size,
+        vacuum=vacuum if vacuum > 0 else 0,  # Only add vacuum if requested
+        layers=layers
     )
     
     # Set periodic boundary conditions
@@ -70,6 +71,19 @@ def build_mos2_structure(supercell_size=(10, 10), layers=8, a=3.18, vacuum=0):
     print(f"  - S atoms: {symbols.count('S')}")
     print(f"  - Cell: {cell[0,0]:.2f} x {cell[1,1]:.2f} x {cell[2,2]:.2f} Å")
     print(f"  - Volume: {atoms.get_volume():.2f} Å³")
+    
+    # Validate proper MoS2 stoichiometry
+    mo_count = symbols.count('Mo')
+    s_count = symbols.count('S')
+    expected_ratio = 2.0  # S:Mo ratio should be 2:1
+    actual_ratio = s_count / mo_count if mo_count > 0 else 0
+    
+    print(f"  - Stoichiometry check: S/Mo ratio = {actual_ratio:.3f} (expected: {expected_ratio:.3f})")
+    
+    if abs(actual_ratio - expected_ratio) > 0.01:
+        print(f"  WARNING: Stoichiometry deviation detected!")
+    else:
+        print(f"  ✓ Proper MoS2 stoichiometry confirmed")
     
     return atoms
 
@@ -128,13 +142,12 @@ class MoS2NPTSimulation:
         print("="*50)
         
         try:
-            # Build MoS2 supercell with specified parameters using ASE's mx2 function
+            # Build MoS2 supercell with specified parameters using SurfaceBuilder
             print(f"Building {self.layers}-layer MoS2 with {self.supercell_size[0]}x{self.supercell_size[1]} supercells...")
             self.atoms = build_mos2_structure(
                 supercell_size=self.supercell_size,
                 layers=self.layers,
-                a=3.18,  # MoS2 lattice parameter
-                vacuum=0
+                vacuum=0  # No vacuum for bulk simulation
             )
             
             # Assign calculator
