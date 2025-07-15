@@ -40,7 +40,7 @@ mkdir -p results
 cd results
 
 # Copy the simulation script to results directory for this run
-cp ../src/mos2_npt_simulation.py ../src/surfaces.py .
+cp ../src/mos2_npt_simulation.py .
 
 # Run the simulation
 echo "Starting MoS2 NPT simulation..."
