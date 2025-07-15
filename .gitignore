@@ -1,0 +1,151 @@
+# Doped MoS2 Density Project - .gitignore
+
+# =============================================================================
+# SIMULATION OUTPUT FILES
+# =============================================================================
+
+# ASE trajectory files
+*.traj
+
+# MD simulation logs
+md_*.log
+*.log
+
+# Density and analysis files
+density_*.txt
+analysis_*.txt
+
+# Energy and thermodynamics data
+energy_*.dat
+thermo_*.dat
+
+# XYZ structure files (except initial reference structures)
+*.xyz
+!reference_*.xyz
+!initial_*.xyz
+
+# =============================================================================
+# TEMPORARY AND CACHE FILES
+# =============================================================================
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# =============================================================================
+# COMPUTATIONAL OUTPUT
+# =============================================================================
+
+# Fairchem/OCP model files
+*.pt
+*.pth
+model_*.pkl
+
+# SLURM job output files
+job.e*
+job.o*
+slurm-*.out
+
+# Output directories
+results/
+output/
+tmp/
+temp/
+
+# Large data files
+*.npy
+*.npz
+*.h5
+*.hdf5
+
+# =============================================================================
+# DEVELOPMENT AND SYSTEM FILES
+# =============================================================================
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git merge files
+*.orig
+
+# =============================================================================
+# SPECIFIC TO THIS PROJECT
+# =============================================================================
+
+# Test output files
+test_*.xyz
+verification_*.txt
+
+# Backup files
+*.bak
+*.backup
+
+# Large structure files (except essential ones)
+supercell_*.xyz
+large_system_*.xyz
+
+# Intermediate calculation files
+calc_*.pkl
+forces_*.npy
+energies_*.dat
+
+# =============================================================================
+# ALLOW ESSENTIAL FILES
+# =============================================================================
+
+# Always include these important files
+!Mo2S4.cif
+!README.md
+!SESSION_LOG.md
+!requirements.txt
+!setup.py
+!LICENSE
+
+# Include essential reference structures
+!data/*.cif
+!data/reference_*.xyz
+
+# Include scripts but not their output
+!scripts/*.py
+!scripts/*.sh
+
+# Include source code
+!src/*.py
+
+# Include documentation
+!docs/*.md
+!docs/*.rst
