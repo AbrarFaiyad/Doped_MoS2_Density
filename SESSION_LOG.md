@@ -370,3 +370,35 @@ atoms = surface_builder.build_2d_material(
 - Run NPT simulation with properly built MoS2
 
 ---
+
+## Session Entry: July 14, 2025 - Shell Script Fix
+
+### User Prompt:
+```
+you were not copying the surfaces.py code to results 
+```
+
+### Problem Identified:
+The shell script `run_npt_simulation.sh` had incorrect syntax for copying multiple files. The line:
+```bash
+cp ../src/{mos2_npt_simulation.py, surfaces.py} .
+```
+
+### Issue Analysis:
+- **Problem**: Bash brace expansion doesn't work with spaces after commas
+- **Consequence**: Only `mos2_npt_simulation.py` was being copied, `surfaces.py` was missing
+- **Impact**: Import error when running simulation (`from surfaces import SurfaceBuilder` fails)
+
+### Solution Applied:
+```bash
+# FIXED: Remove braces and spaces, list files separately
+cp ../src/mos2_npt_simulation.py ../src/surfaces.py .
+```
+
+### Files Modified:
+- `scripts/run_npt_simulation.sh` - Fixed file copying syntax
+
+### Status:
+✅ **COMPLETED** - Shell script file copying fixed
+
+---
