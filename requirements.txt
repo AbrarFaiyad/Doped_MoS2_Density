@@ -1,0 +1,7 @@
+# Requirements for MoS2 NPT Simulation
+ase>=3.22.0
+numpy>=1.21.0
+fairchem-core
+torch
+matplotlib
+scipy

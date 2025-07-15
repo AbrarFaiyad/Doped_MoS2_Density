@@ -60,3 +60,72 @@ Setting up new project infrastructure in `/home/afaiyad/borgstore/Doped_MoS2_den
 - Ready to implement computational tools and analysis scripts
 
 ---
+
+## Session Entry: July 14, 2025 - MoS2 NPT Simulation Request
+
+### User Prompt:
+```
+First lets build a script which uses ase and fairchem calculator to build a layered MoS2 system containing 8 layers of 10x10 sheets of MoS2 and run an npt simulation on it
+```
+
+### Problem Analysis:
+Building a comprehensive script for MoS2 NPT simulation with the following requirements:
+1. Create 8-layer MoS2 system with 10x10 supercells per layer
+2. Use ASE (Atomic Simulation Environment) for structure building
+3. Integrate Fairchem calculator for ML potential
+4. Implement NPT ensemble simulation for density studies
+
+### Approach:
+Based on the provided `unified_melting_quenching.py` reference, I will:
+1. Leverage the SurfaceBuilder from energy_profile_calculator
+2. Use Fairchem's UMA-M-1.1 model for accurate MoS2 calculations
+3. Implement NPT dynamics with ASE
+4. Include proper logging and trajectory saving
+5. Add density calculation and monitoring
+
+### Status: 
+🟡 **IN PROGRESS** - Creating MoS2 NPT simulation script
+
+### Code Implementation Completed:
+- Created comprehensive NPT simulation script in `src/mos2_npt_simulation.py`
+- Includes MoS2NPTSimulation class with all required functionality
+- Added density monitoring and analysis capabilities
+- Created requirements.txt and run script
+
+### Issues Identified:
+- NPT implementation uses incorrect ASE class (should be NPTBerendsen)
+- Parameter units and names need correction based on ASE documentation
+- User provided correct ASE NPT documentation for proper implementation
+
+### Current Fix:
+Updating NPT implementation to use NPTBerendsen with correct parameters:
+- pressure_au instead of externalstress
+- taut/taup for time coupling constants
+- compressibility_au parameter
+- Proper unit conversions
+
+### Implementation Updates Completed:
+✅ **Fixed NPT Implementation**:
+- Changed from `ase.md.npt.NPT` to `ase.md.nptberendsen.NPTBerendsen`
+- Updated parameters to match ASE documentation:
+  - `pressure_au` in atomic units (eV/Å³)
+  - `taut=100*units.fs` for temperature coupling (100 fs)
+  - `taup=1000*units.fs` for pressure coupling (1 ps)
+  - `compressibility_au` for MoS2 material properties
+  - `fixcm=True` to fix center of mass
+- Proper unit conversions implemented
+- Updated docstrings and comments
+
+### Additional Files Created:
+- `scripts/test_npt_setup.py` - Test script to validate setup before running full simulation
+- Validates imports, surface builder, and simulation class initialization
+
+### Status: 
+✅ **COMPLETED** - NPT simulation script fixed and ready
+
+### Next Steps:
+- Run test script to validate setup
+- Execute NPT simulation
+- Analyze results
+
+---
